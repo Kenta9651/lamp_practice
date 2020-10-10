@@ -25,6 +25,7 @@ xf_options();
         <input type="password" name="password" id="password" class="form-control">
       </div>
       <input type="submit" value="ログイン" class="btn btn-primary">
+      <input type="hidden" name="token" value="<?php print h($token);?>">
     </form>
   </div>
 </body>
