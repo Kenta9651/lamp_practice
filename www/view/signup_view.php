@@ -1,3 +1,6 @@
+<?php
+xf_options();
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>

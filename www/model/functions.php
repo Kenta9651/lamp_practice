@@ -10,6 +10,10 @@ function redirect_to($url){
   exit;
 }
 
+function xf_options(){
+  header('X-FRAME-OPTIONS:DENY');
+}
+
 function get_get($name){
   if(isset($_GET[$name]) === true){
     return $_GET[$name];
