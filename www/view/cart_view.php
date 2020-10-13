@@ -1,5 +1,5 @@
 <?php
-xf_options();
+header('X-FRAME-OPTIONS:DENY');
 ?>
 <!DOCTYPE html>
 <html lang="ja">

@@ -26,14 +26,16 @@ $token = get_post('token');
 
 $image = get_file('image');
 
-if(is_valid_csrf_token($token) === true){
-  if(regist_item($db, $name, $price, $stock, $status, $image)){
-    set_message('商品を登録しました。');
-  }else {
-    set_error('商品の登録に失敗しました。');
-  }
-}else{
+if(is_valid_csrf_token($token) === false){
   redirect_to(LOGIN_URL);
+}
+
+unset($_SESSION['csrf_token']);
+
+if(regist_item($db, $name, $price, $stock, $status, $image)){
+  set_message('商品を登録しました。');
+}else {
+  set_error('商品の登録に失敗しました。');
 }
 
 redirect_to(ADMIN_URL);

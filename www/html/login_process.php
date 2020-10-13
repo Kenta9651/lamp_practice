@@ -15,8 +15,13 @@ $token = get_post('token');
 
 $db = get_db_connect();
 
-if(is_valid_csrf_token($token) === true){
-  $user = login_as($db, $name, $password);
+if(is_valid_csrf_token($token) === false){
+  redirect_to(LOGIN_URL);
+}
+
+unset($_SESSION['csrf_token']);
+
+$user = login_as($db, $name, $password);
   if( $user === false){
     set_error('ログインに失敗しました。');
     redirect_to(LOGIN_URL);
@@ -27,6 +32,3 @@ if(is_valid_csrf_token($token) === true){
     redirect_to(ADMIN_URL);
   }
   redirect_to(HOME_URL);
-}else{
-  redirect_to(LOGIN_URL);
-}

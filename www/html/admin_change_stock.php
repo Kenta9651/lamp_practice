@@ -22,14 +22,16 @@ $item_id = get_post('item_id');
 $stock = get_post('stock');
 $token = get_post('token');
 
-if(is_valid_csrf_token($token) === true){
-  if(update_item_stock($db, $item_id, $stock)){
-    set_message('在庫数を変更しました。');
-  } else {
-    set_error('在庫数の変更に失敗しました。');
-  }
-}else{
+if(is_valid_csrf_token($token) === false){
   redirect_to(LOGIN_URL);
+}
+
+unset($_SESSION['csrf_token']);
+
+if(update_item_stock($db, $item_id, $stock)){
+  set_message('在庫数を変更しました。');
+} else {
+  set_error('在庫数の変更に失敗しました。');
 }
 
 redirect_to(ADMIN_URL);
