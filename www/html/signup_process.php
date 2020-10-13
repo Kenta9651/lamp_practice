@@ -12,8 +12,15 @@ if(is_logined() === true){
 $name = get_post('name');
 $password = get_post('password');
 $password_confirmation = get_post('password_confirmation');
+$token = get_post('token');
 
 $db = get_db_connect();
+
+if(is_valid_csrf_token($token) === false){
+  redirect_to(SIGNUP_URL);
+}
+
+unset($_SESSION['csrf_token']);
 
 try{
   $result = regist_user($db, $name, $password, $password_confirmation);

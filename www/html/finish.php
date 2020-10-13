@@ -15,6 +15,13 @@ $db = get_db_connect();
 $user = get_login_user($db);
 
 $carts = get_user_carts($db, $user['user_id']);
+$token = get_post('token');
+
+if(is_valid_csrf_token($token) === false){
+  redirect_to(LOGIN_URL);
+}
+
+unset($_SESSION['csrf_token']);
 
 if(purchase_carts($db, $carts) === false){
   set_error('商品が購入できませんでした。');
