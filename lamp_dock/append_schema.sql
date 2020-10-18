@@ -1,4 +1,4 @@
-CREATE TABLE item_history(
+CREATE TABLE `item_history`(
     `order_id` int(11) NOT NULL,
     `user_id` int(11) NOT NULL,
     `sum` int(11) NOT NULL,
@@ -8,6 +8,5 @@ CREATE TABLE item_history(
 CREATE TABLE `item_detail`(
     `user_id` int(11) NOT NULL,
     `item_id` int(11) NOT NULL,
-    `amount` int(11) NOT NULL,
-    `subtotal` int(11) NOT NULL,
+    `amount` int(11) NOT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
