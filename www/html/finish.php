@@ -30,4 +30,8 @@ if(purchase_carts($db, $carts) === false){
 
 $total_price = sum_carts($carts);
 
+history_subscribe($db,$user['user_id'],$total_price,$carts);
+
+
+
 include_once '../view/finish_view.php';
