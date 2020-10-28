@@ -161,3 +161,60 @@ function validate_cart_purchase($carts){
   return true;
 }
 
+function item_history($db,$user,$total_price){
+  $sql = "
+    INSERT INTO
+      item_history(
+        user_id,
+        sum
+      )
+    VALUES(:user_id, :sum)
+  ";
+  $params = array(':user_id' => $user, ':sum' => $total_price);
+  return execute_query($db, $sql, $params);
+}
+
+function item_detail($db,$order_id,$carts){
+  $sql = "
+    INSERT INTO
+      item_detail(
+        order_id,
+        item_id,
+        amount,
+        price
+      )
+    VALUES(:order_id, :item_id, :amount, :price)
+  ";
+  foreach($carts as $cart){
+    $params = array(':order_id' => $order_id, 
+                    ':item_id' => $cart['item_id'], 
+                    ':amount' => $cart['amount'], 
+                    ':price' => $cart['price']);
+  }
+  return execute_query($db, $sql, $params);
+}
+
+function history_subscribe($db,$user,$total_price,$carts){
+  //トランザクションの開始
+  $db->beginTransaction();
+  //購入履歴テーブルの挿入処理
+  //引数($db,$user['user_id'],$total_price)
+  //戻り値:true/false
+  //失敗時の処理:エラ-メッセージの設定,ロールバック,カートにリダイレクト
+  if(item_history($db,$user,$total_price) === false){
+    $db->rollback();
+    redirect_to(CART_URL);
+  }
+    $order_id = $db->lastInsertId();
+  //購入明細テーブルの挿入処理
+  //引数($db,$carts)
+  //戻り値:true/false
+  //失敗時の処理:エラ-メッセージの設定,ロールバック,カートにリダイレクト
+  //コミットをする
+  if(item_detail($db,$order_id,$carts) === false){
+    $db->rollback();
+    redirect_to(CART_URL);
+  }else{
+    $db->commit();
+  }
+}
