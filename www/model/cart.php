@@ -174,7 +174,7 @@ function item_history($db,$user,$total_price){
   return execute_query($db, $sql, $params);
 }
 
-function item_detail($db,$order_id,$carts){
+function item_detail($db,$order_id,$cart){
   $sql = "
     INSERT INTO
       item_detail(
@@ -185,13 +185,20 @@ function item_detail($db,$order_id,$carts){
       )
     VALUES(:order_id, :item_id, :amount, :price)
   ";
-  foreach($carts as $cart){
     $params = array(':order_id' => $order_id, 
                     ':item_id' => $cart['item_id'], 
                     ':amount' => $cart['amount'], 
                     ':price' => $cart['price']);
-  }
   return execute_query($db, $sql, $params);
+}
+
+function item_details($db,$order_id,$carts){
+  foreach($carts as $cart){
+    if(item_detail($db,$order_id,$cart) === false){
+      return false;
+    }
+  }
+  return true;
 }
 
 function history_subscribe($db,$user,$total_price,$carts){
@@ -203,6 +210,7 @@ function history_subscribe($db,$user,$total_price,$carts){
   //失敗時の処理:エラ-メッセージの設定,ロールバック,カートにリダイレクト
   if(item_history($db,$user,$total_price) === false){
     $db->rollback();
+    set_error('購入履歴の挿入に失敗しました');
     redirect_to(CART_URL);
   }
     $order_id = $db->lastInsertId();
@@ -211,8 +219,9 @@ function history_subscribe($db,$user,$total_price,$carts){
   //戻り値:true/false
   //失敗時の処理:エラ-メッセージの設定,ロールバック,カートにリダイレクト
   //コミットをする
-  if(item_detail($db,$order_id,$carts) === false){
+  if(item_details($db,$order_id,$carts) === false){
     $db->rollback();
+    set_error('購入明細の挿入に失敗しました');
     redirect_to(CART_URL);
   }else{
     $db->commit();
