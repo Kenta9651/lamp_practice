@@ -14,7 +14,7 @@ header('X-FRAME-OPTIONS:DENY');
 
   <div class="container">
     <div class="text-right">
-      <form method="get" action="sort.php" id="select">
+      <form method="get"  action="sort.php">
         並び替え:
         <select name="sort">
           <option value="">選択してください</option>
@@ -34,20 +34,20 @@ header('X-FRAME-OPTIONS:DENY');
 
     <div class="card-deck">
       <div class="row">
-      <?php foreach($items as $item){ ?>
+      <?php foreach($new as $value){ ?>
         <div class="col-6 item">
           <div class="card h-100 text-center">
             <div class="card-header">
-              <?php print(h($item['name'])); ?>
+              <?php print(h($value['name'])); ?>
             </div>
             <figure class="card-body">
-              <img class="card-img" src="<?php print(h(IMAGE_PATH . $item['image'])); ?>">
+              <img class="card-img" src="<?php print(h(IMAGE_PATH . $value['image'])); ?>">
               <figcaption>
-                <?php print(h(number_format($item['price']))); ?>円
-                <?php if($item['stock'] > 0){ ?>
+                <?php print(h(number_format($value['price']))); ?>円
+                <?php if($value['stock'] > 0){ ?>
                   <form action="index_add_cart.php" method="post">
                     <input type="submit" value="カートに追加" class="btn btn-primary btn-block">
-                    <input type="hidden" name="item_id" value="<?php print(h($item['item_id'])); ?>">
+                    <input type="hidden" name="item_id" value="<?php print(h($value['item_id'])); ?>">
                     <input type="hidden" name="token" value="<?php print h($token);?>">
                   </form>
                 <?php } else { ?>
