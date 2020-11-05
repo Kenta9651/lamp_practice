@@ -219,13 +219,14 @@ function get_sort_new($db){
       stock,
       price,
       image,
-      status
+      status,
+      created
     FROM
       items
     WHERE
       status = 1
     ORDER BY
-      item_id DESC
+      created DESC
     ";
   return fetch_all_query($db,$sql);
 }
